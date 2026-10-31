@@ -2,7 +2,9 @@ English | [简体中文](README.md)
 
 <div align="center">
 
-# 📊 VOC Analyzer
+![VOC Analyzer](assets/banner.jpg)
+
+# VOC Analyzer
 
 **Turn a pile of product reviews into actionable, decision-ready insight**
 
@@ -19,44 +21,32 @@ English | [简体中文](README.md)
 
 ## Project Overview
 
-voc-analyzer is a deep e-commerce review analysis skill (VOC — Voice of Customer) developed by RicePiggy. It turns a pile of product reviews into actionable, decision-ready insight — 22-dimension AI tagging distills user profiles, pain points and real needs; a 15-chapter deep insight report plus themed visualization dashboards; mining product-optimization opportunities from negative reviews and breakout signals from positive ones.
+voc-analyzer is an e-commerce review deep analysis skill developed by RicePiggy for VOC (Voice of Customer) analysis. It turns a batch of product reviews into two outputs: a 22-dimension AI tagging dataset and a 15-chapter insight report. Negative reviews locate product optimization opportunities; positive reviews surface repeatable selling points.
 
-As an **Agent-native** tool, it works with mainstream AI Coding Agents such as Claude Code, Codex, Cursor, and OpenCode, supports local CSV data import and optional [SellerSprite](https://www.sellersprite.com/) integration, and runs with zero API keys.
+As an Agent-native tool, it works with mainstream AI Coding Agents such as Claude Code, Codex, Cursor, and OpenCode, supports local CSV import and optional SellerSprite integration. The pipeline requires no API key — LLM steps consume the host Agent's quota.
 
-> **V2.2 · Agent Self-Execution Mode**: LLM steps (review tagging, 15-chapter report writing) are performed by the host Agent itself — **no claude CLI installation required**. Any AI Coding Agent can run the full pipeline. A `--llm cli` direct mode is retained as a headless fallback.
-
-### V2.0 Core Upgrades
-
-| Feature | V1.0 | V2.0 |
-|---------|------|------|
-| Analysis Engine | Gemini API + CLI dual mode | **CLI single mode** (zero API Key) |
-| Data Source | Local CSV | **Local CSV (primary) + SellerSprite (optional)** |
-| Insight Report | 7-chapter basic analysis | **15-chapter deep insight** (with action decision dashboard + anomaly signal cards) |
-| Visualization Dashboard | 1 black-gold template | **6 themed templates** (Glassmorphism + Chart.js theming) |
-| Feishu Integration | None | **Full sync** (documents + whiteboard + mermaid diagrams) |
-| Architecture | Python scripts | **Agent-native Skill** (SKILL.md instruction-driven) |
-| Tagging Concurrency | 2 | **4** (50% faster) |
+> **V2.2 Agent Self-Execution Mode**: review tagging and report writing are performed by the host Agent itself (`--llm agent`), with no local claude CLI installation required. Without a host Agent, switch to the `--llm cli` direct mode.
 
 ### Workflow
 
 ```
-Data Input: Local CSV (primary) or SellerSprite (optional)
+Data input: local CSV (primary) or SellerSprite (optional)
      ↓
-Phase 1: AI Deep Tagging (concurrency 4, 22-dimension tags)
-Phase 2: User Persona identification (3-4 personas, 3 positive + 3 negative Golden Samples)
-Phase 3: Insight Report generation (15-chapter structured report)
-Phase 4: Unified output (MD + HTML Dashboard + Feishu sync)
+Phase 1: AI deep tagging (concurrency 4, 22-dimension tags)
+Phase 2: User persona identification (3-4 personas, 3 positive + 3 negative representative reviews each)
+Phase 3: Insight report generation (15-chapter structured report)
+Phase 4: Unified output (MD + HTML dashboard + Feishu sync)
 ```
 
-> Since V2.2, the LLM steps in Phase 1/3 are performed by the **host Agent itself** (`--llm agent`: prepare → Agent tags → `--resume` → Agent writes report → `--resume` to finalize); the CLI concurrent path above is retained as a headless fallback (`--llm cli`).
+Python handles the deterministic steps (data loading, batching, statistics, anomaly detection, output packaging). LLM steps are performed by the host Agent, or by the `--llm cli` fallback mode through a local claude/opencode CLI.
 
 ---
 
 ## Core Features
 
-### 📊 22-Dimension Smart Tags
+### 22-Dimension Smart Tags
 
-Comprehensive coverage across 8 major dimensions of review information:
+22 tags across 8 dimensions:
 
 ```
 Demographic (4): Gender, Age Group, Occupation, Purchase Role
@@ -69,9 +59,9 @@ Market (2): Competitive Comparison, Repurchase Intent
 Sentiment (1): Overall Evaluation
 ```
 
-### 🎨 6 Themed Visualization Dashboards
+### 6 Themed Visualization Dashboards
 
-HTML reports **ready for work presentations**, with a Shared Base architecture ensuring unified content structure:
+HTML reports ready for work presentations. The shared base architecture keeps content structure identical across all 6 themes:
 
 | Theme | Style | Best For |
 |-------|-------|----------|
@@ -82,30 +72,34 @@ HTML reports **ready for work presentations**, with a Shared Base architecture e
 | stripe-executive | Emerald Green + Emerald Glass | Finance & enterprise, investment decisions |
 | warm-editorial | Paper & Copper + Paper Glass | Brand reports, editorial style |
 
-Each dashboard includes: 11 sections + anomaly signal card area, interactive Chart.js charts (themed color palettes), responsive design, and Glassmorphism card effects.
+Each dashboard contains 11 sections plus an anomaly signal card area, with Chart.js charts themed to match. Use `--template none` to skip dashboard generation.
 
-### 📋 15-Chapter Deep Insight Report
+### 15-Chapter Deep Insight Report
 
-1. Insight Overview (core findings + strategic direction + market positioning)
-2. Core User Personas (multi-dimensional profiles + core needs + verbatim quotes)
-3. Key Selling Points & Value Validation (data-backed + user quotes)
-4. Major Pain Points & Negative Attribution (severity + cascade effects + action recommendations)
-5. Improvement Suggestions & Priorities (P0/P1/P2 + expected benefits)
-6. Potential Opportunities & Differentiation (data + suggestions)
-7. Typical User Deep Analysis
-8-12. In-depth content chapters
-13. Anomaly Signal Cards (severity-graded decision cards + representative quotes + suggested actions)
-14. Action Decision Dashboard
+1. Insight Overview
+2. Key Data Overview
+3. Core User Personas
+4. Key Selling Points & Value Validation
+5. Major Pain Points & Negative Attribution
+6. Improvement Suggestions & Priorities
+7. Potential Opportunities & Differentiation
+8. Typical User Deep Analysis
+9. Review Time Trend Analysis
+10. Rating-Sentiment Divergence
+11. Keyword & Topic Clustering
+12. Purchase Motivation Attribution Chain
+13. Anomaly Signal Cards (severity-graded decision cards)
+14. Action Dashboard
 15. Data Appendix
 
-### 📦 Multi-format Output + Feishu Sync
+### Multi-Format Output and Feishu Sync
 
 | Output | Format | Description |
 |--------|--------|-------------|
-| Tagging Data | CSV | Raw reviews + 22-dimension tags |
-| Insight Report | Markdown | 15-chapter deep analysis |
-| Visualization Dashboard | HTML | 6 themes available, Glassmorphism |
-| Feishu Document | — | Auto-sync report + mermaid whiteboard |
+| Tagging data | CSV | Raw reviews + 22-dimension tags |
+| Insight report | Markdown | 15-chapter deep analysis |
+| Visualization dashboard | HTML | 6 themes available |
+| Feishu document | — | Auto-synced report + mermaid whiteboard |
 
 ---
 
@@ -114,18 +108,18 @@ Each dashboard includes: 11 sections + anomaly signal card area, interactive Cha
 | Requirement | Details |
 |-------------|---------|
 | **Operating System** | macOS / Linux / Windows |
-| **Python** | **3.10 or higher** (3.11.x recommended) |
-| **Agent CLI** | Any AI Coding Agent (Claude Code, Codex, Cursor, OpenCode, etc.). Agent self-execution mode has zero CLI dependency; only headless direct runs (`--llm cli`) require claude/opencode |
+| **Python** | 3.10 or higher (3.11.x recommended) |
+| **Agent CLI** | Any AI Coding Agent (Claude Code, Codex, Cursor, OpenCode, etc.). Agent self-execution mode needs no extra CLI; headless direct mode requires a local claude or opencode CLI |
 | **Memory** | 4GB+ recommended |
 | **Feishu Sync (optional)** | Requires [lark-cli](https://github.com/germalli/lark-cli) installed and authenticated |
 
-> **Feishu Sync Note**: To sync analysis results to Feishu documents, install `lark-cli` in advance (`npm install -g lark-cli`) and complete `lark-cli login` authentication. If not installed, the tool will automatically skip the Feishu sync step without affecting other features.
+> **Feishu Sync Note**: to sync results to Feishu documents, install `lark-cli` in advance (`npm install -g lark-cli`) and complete `lark-cli login`. Without it, the tool skips Feishu sync automatically and all other features work as usual.
 
 ---
 
 ## Quick Start
 
-### Option 1: Install via skills.sh ecosystem (recommended)
+### Option 1: Install via the skills.sh ecosystem (recommended)
 
 ```bash
 npx skills add RicePiggy7/voc-analyzer
@@ -134,10 +128,10 @@ npx skills add RicePiggy7/voc-analyzer
 After installation, invoke directly with natural language in Claude Code:
 
 ```bash
-# Example 1: Analyze a specific file
+# Example 1: analyze a specific file
 Please analyze the reviews for this product: reviews.csv
 
-# Example 2: Describe your need
+# Example 2: describe your need
 Help me do a deep analysis of competitor reviews
 ```
 
@@ -152,22 +146,22 @@ pip install -r requirements.txt
 ### Run Parameters
 
 ```bash
-# === Data Input Methods ===
+# === Data input ===
 
-# Method 1: Local CSV file
+# Option 1: local CSV file
 python3 main.py your_reviews.csv --max-reviews 200
 
-# Method 2: SellerSprite platform data (optional, requires SELLERSPRITE_SECRET_KEY configuration)
+# Option 2: SellerSprite data (optional, requires SELLERSPRITE_SECRET_KEY)
 python3 main.py --source sellersprite --asin B09XYZ123 --site US --max-reviews 200
 
-# === LLM Execution Mode (V2.2) ===
-# agent (recommended — host Agent self-executes tagging & report, zero CLI dependency):
+# === LLM execution mode (V2.2) ===
+# agent (recommended, host Agent self-executes tagging and report):
 python3 main.py your_reviews.csv --llm agent --max-reviews 200 --creator "Your Name"
-#   → after prepare exits, the host Agent tags/writes per prompts, advancing via --resume <workdir>
-# cli (default — headless fallback, subprocess to claude/opencode in one run):
+#   → after prepare exits, the host Agent tags/writes per the prompts, advancing with --resume <workdir>
+# cli (default, headless fallback, one subprocess call to claude/opencode):
 python3 main.py your_reviews.csv --max-reviews 200 --creator "Your Name"
 
-# === Full Parameters ===
+# === Full parameters ===
 python3 main.py your_reviews.csv \
   --asin B09XYZ123 \
   --template premium-gold \
@@ -175,71 +169,66 @@ python3 main.py your_reviews.csv \
   --concurrent 4 \
   --creator "Your Name"
 
-# === Visualization Template (choose from 6, or "none" to skip) ===
+# === Visualization template (choose 1 of 6, or none to skip) ===
 --template premium-gold|dark-tech|linear-minimal|posthog-analytics|stripe-executive|warm-editorial|none
 
-# === Feishu Sync (requires lark-cli installed and authenticated) ===
+# === Feishu sync (requires lark-cli installed and authenticated) ===
 --feishu-sync auto|manual|skip
 ```
 
 ---
 
-## CSV File Format Requirements
+## CSV File Format
 
-The tool supports automatic fuzzy matching of column names. CSV files should contain:
+Column names are fuzzy-matched automatically. A CSV file needs:
 
-| Required Column | Accepted Column Names (fuzzy match) |
-|-----------------|--------------------------------------|
-| Review Content | 内容/评价/body/review/text/comment |
+| Required Column | Accepted Names (fuzzy match) |
+|-----------------|------------------------------|
+| Review body | 内容/评价/body/review/text/comment |
 | Rating | 打分/rating/score/star |
 | Date (optional) | 时间/date/日期/time |
 
-**Example**: See `examples/reviews_sample.csv` for details.
+See `examples/reviews_sample.csv` for a sample file.
 
 ---
 
-## Output Examples
+## Output Example
 
-After the run completes, the following files will be generated in the `output/` directory:
+After a run, the following files are generated in the `output/` directory:
 
-### 1. CSV Tagging Data
+### 1. CSV Tag Data
+
 ```csv
-Review Content,Rating,Gender,Age Group,Occupation,Purchase Role,Usage Scenario,Satisfaction...
-"The quality is amazing",5,Female,25-34,Office Worker,Personal Use,Home Office,High...
+评论内容,评分,性别,年龄段,职业,购买角色,使用场景,满意度...
+"The quality is amazing",5,女性,25-34岁,白领,自用,家用办公,高...
 ```
 
 ### 2. Markdown Insight Report
-```markdown
-# Product Analysis Insight Report
 
-## Core Findings
-- User Satisfaction: 92%
-- Key Strengths: Premium materials, beautiful design
-- Improvement Suggestions: Optimize packaging, enhance durability
+```markdown
+# Product Insight Report
+
+## Key Findings
+- User satisfaction: 92%
+- Main strengths: solid materials, good design
+- Improvement suggestions: better packaging, improved durability
 ...
 ```
 
 ### 3. HTML Visualization Dashboard
-- Black & gold luxury color scheme
-- Interactive charts
-- Dynamic data display
-- Creator signature (gilded glow effect)
+
+- 6 themes available, see "6 Themed Visualization Dashboards"
+- Interactive Chart.js charts built from tagging statistics
+- Customizable report signature (`--creator`)
 
 ---
 
 ## Use Cases
 
-### Case 1: Product Optimization
-Analyze your own product reviews to discover user pain points and optimize product features and design.
-
-### Case 2: Competitive Analysis
-Analyze competitor reviews to understand their strengths and weaknesses, and identify differentiation opportunities.
-
-### Case 3: Market Research
-Batch-analyze reviews across multiple products to understand market demand, user preferences, and industry trends.
-
-### Case 4: User Insights
-Deeply understand your target user groups, build precise User Personas, and optimize marketing strategies.
+- **Product optimization**: analyze your own product reviews to locate pain points and improve features and design.
+- **Competitive analysis**: analyze competitor reviews to understand their strengths and weaknesses and find differentiation opportunities.
+- **Market research**: analyze reviews across multiple products to understand market demand and user preferences.
+- **User insight**: build user personas from reviews to support marketing decisions.
 
 ---
 
@@ -247,37 +236,35 @@ Deeply understand your target user groups, build precise User Personas, and opti
 
 ```
 voc-analyzer/
-├── main.py                      # V2.0 main entry (4-Phase workflow)
+├── main.py                      # V2.0 main entry (4-phase pipeline)
 ├── SKILL.md                     # Agent instruction file (Claude Code Skill)
 ├── requirements.txt             # Python dependencies
 ├── .env.example                 # Environment variable template
 ├── src/
-│   ├── config.py                # CLI single mode configuration
-│   ├── template_engine.py       # Unified template engine (Jinja2 SSR + Shared Base)
-│   ├── chart_engine.py          # Chart.js chart configuration generation
-│   ├── insights_generator.py    # 15-chapter Insight Report generation (CLI subprocess)
+│   ├── config.py                # Configuration
+│   ├── template_engine.py       # Unified template engine (Jinja2 SSR + shared base)
+│   ├── chart_engine.py          # Chart.js chart config generator
+│   ├── insights_generator.py    # 15-chapter report generation (CLI subprocess)
 │   ├── agent_pipeline.py        # Agent self-execution mode (prepare/resume state machine)
 │   ├── pipeline_common.py       # Shared output phase (tagged CSV + MD + HTML + Feishu)
 │   ├── output_manager.py        # Output management (MD + HTML + Feishu sync)
 │   ├── feishu_sync.py           # Feishu document + whiteboard sync
 │   ├── report_generator.py      # Report generation (compatibility layer)
 │   ├── data_fetchers/           # Data access layer (CSV + SellerSprite)
-│   ├── prompts/                 # 15-chapter Prompt system
-│   └── templates/               # Visualization Dashboard templates
-│       ├── base/                # Shared Base
-│       │   ├── dashboard_base.html   # Base HTML (Jinja2)
-│       │   └── dashboard_base.css    # Base layout CSS
-│       ├── premium-gold/        # Black-gold theme
+│   ├── prompts/                 # 15-chapter prompt system
+│   └── templates/               # Dashboard templates
+│       ├── base/                # Shared base
+│       ├── premium-gold/        # Black & gold theme
 │       ├── dark-tech/           # Cyberpunk theme
-│       ├── linear-minimal/      # Minimalist blue-white theme
+│       ├── linear-minimal/      # Minimalist blue & white theme
 │       ├── posthog-analytics/   # Warm orange analytics theme
-│       ├── stripe-executive/    # Emerald enterprise theme
-│       └── warm-editorial/      # Newspaper editorial theme
-├── assets/                      # Static resources (README banner)
-├── examples/                    # Sample data + output examples
+│       ├── stripe-executive/    # Emerald executive theme
+│       └── warm-editorial/      # Paper editorial theme
+├── assets/                      # Static assets (README banner)
+├── examples/                    # Sample data + output samples
 ├── tools/                       # Utility scripts
-├── references/                  # Reference documentation
-└── docs/                        # User documentation
+├── references/                  # Reference docs
+└── docs/                        # User docs
 ```
 
 ---
@@ -285,78 +272,46 @@ voc-analyzer/
 ## FAQ
 
 <details>
-<summary><b>Q1: What are the differences between V2.0 and V1.0?</b></summary>
+<summary><b>Q1: What API key is required?</b></summary>
 
-**A**: V2.0 is a comprehensive upgrade:
-- **Zero API Key**: Removed Gemini dependency, unified to CLI single mode
-- **14-chapter report**: Expanded from 7 chapters to 14 chapters of deep insight
-- **6 themed dashboards**: Expanded from 1 to 6 (with Glassmorphism effects)
-- **Feishu sync**: Auto-sync documents + mermaid whiteboards
-- **Shared Base architecture**: Fix bugs in one place; adding a new theme requires only one CSS file
+**A**: None. In `--llm agent` mode, LLM steps are performed by the host Agent (any AI Coding Agent works, consuming its quota); the `--llm cli` fallback mode uses a Claude Code or OpenCode CLI and consumes that quota instead.
 </details>
 
 <details>
-<summary><b>Q2: Do I need any API Key?</b></summary>
+<summary><b>Q2: Which e-commerce platforms are supported?</b></summary>
 
-**A**: **No API Key is required**. In `--llm agent` mode, LLM steps are self-executed by the host Agent (any AI Coding Agent works, consuming the host quota); the `--llm cli` fallback uses the Claude Code / OpenCode CLI, consuming the corresponding quota.
-</details>
-
-<details>
-<summary><b>Q3: What are the CSV file format requirements?</b></summary>
-
-**A**: The CSV file needs to contain the following columns (fuzzy matching supported):
-- **Review Content**: 内容/评价/body/review
-- **Rating**: 打分/rating/score
-- **Date** (optional): 时间/date/日期
-
-See `examples/reviews_sample.csv` for details.
-</details>
-
-<details>
-<summary><b>Q4: How do I choose a visualization template?</b></summary>
-
-**A**: The 6 templates correspond to different scenarios:
-- **premium-gold**: Executive presentations, brand showcases (default)
-- **dark-tech**: Technical teams, data analysis
-- **linear-minimal**: Product reviews, clean presentations
-- **posthog-analytics**: Operational reviews, growth analysis
-- **stripe-executive**: Finance & enterprise, investment decisions
-- **warm-editorial**: Brand reports, magazine style
-
-Use `--template none` to skip dashboard generation.
-</details>
-
-<details>
-<summary><b>Q5: Which e-commerce platforms are supported?</b></summary>
-
-**A**: In theory, all e-commerce platforms that provide review exports are supported: Amazon, eBay, AliExpress, Shopee, Taobao/Tmall, and any other CSV-format review data.
+**A**: Any platform that can export reviews as CSV: Amazon, eBay, AliExpress, Shopee, Taobao/Tmall, and other CSV-format review data.
 </details>
 
 ---
 
-## Comparison with Other Tools
+## Capabilities and Limits
 
-| Feature | VOC Analyzer V2.0 | Other Tools |
-|---------|---------------------------|-------------|
-| **Architecture** | Agent-native Skill | Typically standalone scripts |
-| **API Key** | Zero (host Agent self-execution / CLI fallback) | Most require API keys |
-| **Insight Report** | 15-chapter deep analysis | Basic statistics |
-| **Visualization** | 6 themes + Glassmorphism | Single template or none |
-| **Feishu Integration** | Document + whiteboard auto-sync | Mostly unsupported |
-| **Data Privacy** | Local processing, no third-party uploads | Mostly online services |
-| **Template Extension** | New theme = 1 CSS file | Requires full rewrite |
+**Capabilities:**
+
+- Agent-native: works with mainstream Coding Agents, LLM steps self-executed, no separate CLI installation needed
+- Local processing: review data never goes through third-party online services
+- Feishu integration: reports and mermaid diagrams sync automatically as Feishu documents and whiteboards
+- Template extension: shared base architecture — a new theme needs only one CSS file
+
+**Limits:**
+
+- Requires a Python 3.10+ environment and basic command-line experience
+- Review data must be provided by you: platform CSV export, or the SellerSprite API (secret key required)
+- Tagging and writing consume host Agent or CLI quota; larger review sets take proportionally longer
+- Output is local files (CSV/Markdown/HTML); no online hosting or team collaboration features
 
 ---
 
 ## Roadmap
 
 - [x] **v1.0.0** - First official release (22-dimension tags + dual mode + HTML dashboard)
-- [x] **v2.0.0** - Agent-native version (14-chapter report + 6 themes + Feishu sync + Shared Base architecture)
-- [x] **v2.1.0** - Anomaly signal cards + SellerSprite data source + test suite (52 cases)
-- [x] **v2.2.0** - Agent self-execution mode (tagging & report by host Agent, zero CLI dependency; 59 test cases)
-- [x] **v2.2.1** - Three-part description storefront (brand marketing + English summary + triggers preserved)
+- [x] **v2.0.0** - Agent-native version (14-chapter report + 6 themes + Feishu sync + shared base architecture)
+- [x] **v2.1.0** - Anomaly signal cards + SellerSprite data source + test suite (52 tests)
+- [x] **v2.2.0** - Agent self-execution mode (tagging and report writing by the host Agent, zero CLI dependency; 59 tests)
+- [x] **v2.2.1** - Docs and installation metadata revision
 - [ ] **v2.3.0** - Web enhancements (frontend template selector + screenshot export)
-- [ ] **v3.0.0** - Multi-platform analysis (batch ASIN + competitive comparison reports)
+- [ ] **v3.0.0** - Multi-platform analysis (batch ASIN + competitor comparison reports)
 
 ---
 
@@ -368,22 +323,12 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Acknowledgments
 
-- Thanks to Anthropic for providing Claude AI
-- Thanks to Google for providing Gemini API
-- Inspired by the wisdom and contributions of the open-source community
+- Thanks to Anthropic for Claude AI
+- Thanks to the open-source community for its projects and practices
 
 ---
 
-## Technical Support
+## Support
 
 - **Issues**: [GitHub Issues](https://github.com/RicePiggy7/voc-analyzer/issues)
-
----
-
-## 📖 Final Words
-
-<div align="center">
-
-**If this tool helps you, please consider giving it a ⭐ Star.**
-
-</div>
+- If this tool helps you, a Star is appreciated.

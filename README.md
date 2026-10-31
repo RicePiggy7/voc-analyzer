@@ -4,14 +4,14 @@
 
 ![VOC Analyzer](assets/banner.jpg)
 
-# 📊 VOC Analyzer
+# VOC Analyzer
 
 **把一堆产品评论，变成一份能落地的决策依据**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
-**15章深度洞察报告 · 6套主题可视化看板 · 飞书文档同步 · Agent原生架构**
+**15 章深度洞察报告 · 6 套主题可视化看板 · 飞书文档同步 · Agent 原生架构**
 
 **Created By RicePiggy**
 
@@ -21,44 +21,32 @@
 
 ## 项目简介
 
-voc-analyzer 是 RicePiggy 研发的电商评论深度分析 Skill（VOC 客户之声分析），他会帮你把一堆产品评论变成一份能落地的决策依据——22 维 AI 打标提炼用户画像、痛点和真实需求，输出 15 章深度洞察报告和可视化看板，从差评里挖出产品优化机会点、从好评里找到爆款基因。
+voc-analyzer 是 RicePiggy 研发的电商评论深度分析 Skill，用于 VOC（Voice of Customer，客户之声）分析。它把一批产品评论处理成两类结果：22 维 AI 打标数据和一份 15 章洞察报告。差评用来定位产品优化机会，好评用来总结可复制的卖点。
 
-作为 **Agent 原生** 工具，它适配 Claude Code、Codex、Cursor、OpenCode 等主流 AI Coding Agent，支持本地 CSV 数据导入和 [卖家精灵](https://www.sellersprite.com/) 平台数据对接（可选增强），零 API Key 即可运行。
+作为 Agent 原生工具，它适配 Claude Code、Codex、Cursor、OpenCode 等主流 AI Coding Agent，支持本地 CSV 导入和卖家精灵数据对接（可选）。流程不需要 API Key，LLM 工序消耗宿主 Agent 的配额。
 
-> **V2.2 · Agent 自执行模式**：LLM 工序（评论打标、15 章报告撰写）由宿主 Agent 自己完成，**不依赖本机安装 claude CLI**——任何 AI Coding Agent 都能完整跑通。另保留 `--llm cli` 直跑模式作为无宿主 Agent 时的 headless 后备。
-
-### V2.0 核心升级
-
-| 特性 | V1.0 | V2.0 |
-|------|------|------|
-| 分析引擎 | Gemini API + CLI 双模式 | **CLI 单一模式**（零 API Key） |
-| 数据源 | 本地 CSV | **本地 CSV（主源）+ 卖家精灵（可选）** |
-| 洞察报告 | 7 章基础分析 | **15 章深度洞察**（含行动决策仪表盘 + 异常信号卡） |
-| 可视化看板 | 1 套黑金模板 | **6 套主题模板**（玻璃拟态 + Chart.js 主题化） |
-| 飞书集成 | 无 | **完整同步**（文档 + 白板 + mermaid 图表） |
-| 架构 | Python 脚本 | **Agent 原生 Skill**（SKILL.md 指令驱动） |
-| 打标并发 | 2 | **4**（提速 50%） |
+> **V2.2 Agent 自执行模式**：评论打标和报告撰写由宿主 Agent 自己完成（`--llm agent`），不依赖本机安装 claude CLI。没有宿主 Agent 时，可改用 `--llm cli` 直跑模式。
 
 ### 工作流程
 
 ```
 数据输入: 本地 CSV（主源）或 卖家精灵（可选）
      ↓
-Phase 1: AI 深度打标（并发4，22维度标签）
-Phase 2: 用户画像识别（3-4个画像，3正+3负黄金样本）
-Phase 3: 洞察报告生成（15章结构化报告）
-Phase 4: 统一输出（MD + HTML看板 + 飞书同步）
+Phase 1: AI 深度打标（并发 4，22 维标签）
+Phase 2: 用户画像识别（3-4 个画像，各配 3 正 + 3 负代表性评论）
+Phase 3: 洞察报告生成（15 章结构化报告）
+Phase 4: 统一输出（MD + HTML 看板 + 飞书同步）
 ```
 
-> V2.2 起 Phase 1/3 的 LLM 工序默认由**宿主 Agent 自执行**（`--llm agent`，prepare → Agent 打标 → `--resume` → Agent 撰写报告 → `--resume` 收尾）；上图 CLI 并发路径保留为 headless 后备（`--llm cli`）。
+Python 负责确定性工序（数据加载、分批、统计、异常检测、输出打包），LLM 工序由宿主 Agent 自行完成，或由 `--llm cli` 后备模式调用本机 claude/opencode CLI 完成。
 
 ---
 
 ## 核心特性
 
-### 📊 22维度智能标签
+### 22 维智能标签
 
-全面覆盖评论信息的8大维度：
+覆盖 8 大维度、共 22 个标签：
 
 ```
 人群维度 (4): 性别、年龄段、职业、购买角色
@@ -71,9 +59,9 @@ Phase 4: 统一输出（MD + HTML看板 + 飞书同步）
 情感维度 (1): 总体评价
 ```
 
-### 🎨 6套主题可视化看板
+### 6 套主题可视化看板
 
-**可直接用于工作汇报**的 HTML 报告，共享基座架构确保内容结构统一：
+可直接用于工作汇报的 HTML 报告。共享基座架构保证 6 套主题的内容结构一致：
 
 | 主题 | 风格 | 适用场景 |
 |------|------|----------|
@@ -84,30 +72,34 @@ Phase 4: 统一输出（MD + HTML看板 + 飞书同步）
 | stripe-executive | 翡翠绿 + 翡翠玻璃 | 金融企业、投资决策 |
 | warm-editorial | 纸色铜色 + 纸感玻璃 | 品牌报告、编辑风格 |
 
-每个看板包含：11个板块 + 异常信号卡区、交互式 Chart.js 图表（主题色板）、响应式设计、玻璃拟态卡片效果。
+每个看板包含 11 个板块和异常信号卡区，图表基于 Chart.js，配色跟随主题。不需要看板时，用 `--template none` 跳过生成。
 
-### 📋 15章深度洞察报告
+### 15 章深度洞察报告
 
-1. 洞察总览（核心判断 + 战略方向 + 市场定位）
-2. 核心用户画像（多维度画像 + 核心诉求 + 原声引用）
-3. 核心卖点与价值验证（数据支撑 + 用户原话）
-4. 主要痛点与负面归因（严重性 + 瀑布效应 + 行动建议）
-5. 改进建议与优先级（P0/P1/P2 + 预期收益）
-6. 潜在机会与差异化（数据 + 建议）
-7. 典型用户深度解析
-8-12. 深度内容章节
-13. 异常信号卡（严重度分级决策卡 + 代表原话引用 + 建议动作）
+1. 洞察总览
+2. 关键数据概览
+3. 核心用户画像
+4. 核心卖点与价值验证
+5. 主要痛点与负面归因
+6. 改进建议与优先级
+7. 潜在机会与差异化
+8. 典型用户深度解析
+9. 评论时间趋势分析
+10. 评分与文本情感背离
+11. 关键词与话题聚类
+12. 购买动机归因链
+13. 异常信号卡（严重度分级决策卡）
 14. 行动决策仪表盘
 15. 数据附录
 
-### 📦 多格式输出 + 飞书同步
+### 多格式输出与飞书同步
 
 | 输出 | 格式 | 说明 |
 |------|------|------|
-| 打标数据 | CSV | 原始评论 + 22维度标签 |
-| 洞察报告 | Markdown | 15章深度分析 |
-| 可视化看板 | HTML | 6套主题可选，玻璃拟态 |
-| 飞书文档 | — | 自动同步报告 + mermaid白板 |
+| 打标数据 | CSV | 原始评论 + 22 维标签 |
+| 洞察报告 | Markdown | 15 章深度分析 |
+| 可视化看板 | HTML | 6 套主题可选 |
+| 飞书文档 | — | 自动同步报告 + mermaid 白板 |
 
 ---
 
@@ -116,18 +108,18 @@ Phase 4: 统一输出（MD + HTML看板 + 飞书同步）
 | 要求 | 详情 |
 |------|------|
 | **操作系统** | macOS / Linux / Windows |
-| **Python** | **3.10 或更高版本**（推荐 3.11.x） |
-| **Agent CLI** | 任一 AI Coding Agent（Claude Code、Codex、Cursor、OpenCode 等）。Agent 自执行模式零 CLI 依赖；仅 headless 直跑（`--llm cli`）需 claude/opencode |
+| **Python** | 3.10 或更高版本（推荐 3.11.x） |
+| **Agent CLI** | 任一 AI Coding Agent（Claude Code、Codex、Cursor、OpenCode 等）。Agent 自执行模式无需额外 CLI；headless 直跑模式需要本机装有 claude 或 opencode |
 | **内存** | 建议 4GB+ |
 | **飞书同步（可选）** | 需安装 [lark-cli](https://github.com/germalli/lark-cli) 并完成认证登录 |
 
-> **飞书同步说明**：如需将分析结果同步到飞书文档，需提前安装 `lark-cli`（`npm install -g lark-cli`）并完成 `lark-cli login` 认证。如果未安装，工具会自动跳过飞书同步步骤，不影响其他功能。
+> **飞书同步说明**：如需将分析结果同步到飞书文档，需提前安装 `lark-cli`（`npm install -g lark-cli`）并完成 `lark-cli login` 认证。未安装时工具会自动跳过飞书同步，不影响其他功能。
 
 ---
 
 ## 快速开始
 
-### 方式1：使用 skills.sh 生态安装（推荐）
+### 方式 1：使用 skills.sh 生态安装（推荐）
 
 ```bash
 npx skills add RicePiggy7/voc-analyzer
@@ -136,14 +128,14 @@ npx skills add RicePiggy7/voc-analyzer
 安装后，在 Claude Code 中直接用自然语言调用：
 
 ```bash
-# 示例1：指定文件分析
+# 示例 1：指定文件分析
 请分析这个产品的评论：reviews.csv
 
-# 示例2：描述需求
+# 示例 2：描述需求
 帮我做一下竞品评论的深度分析
 ```
 
-### 方式2：手动克隆仓库
+### 方式 2：手动克隆仓库
 
 ```bash
 git clone https://github.com/RicePiggy7/voc-analyzer.git
@@ -156,14 +148,14 @@ pip install -r requirements.txt
 ```bash
 # === 数据输入方式 ===
 
-# 方式1：本地 CSV 文件
+# 方式 1：本地 CSV 文件
 python3 main.py your_reviews.csv --max-reviews 200
 
-# 方式2：卖家精灵平台数据（可选增强，需配置 SELLERSPRITE_SECRET_KEY）
+# 方式 2：卖家精灵数据（可选，需配置 SELLERSPRITE_SECRET_KEY）
 python3 main.py --source sellersprite --asin B09XYZ123 --site US --max-reviews 200
 
 # === LLM 执行模式（V2.2） ===
-# agent（推荐，宿主 Agent 自执行打标与报告，零 CLI 依赖）:
+# agent（推荐，宿主 Agent 自执行打标与报告）:
 python3 main.py your_reviews.csv --llm agent --max-reviews 200 --creator "Your Name"
 #   → prepare 退出后，宿主 Agent 按 prompt 打标/撰写报告，用 --resume <workdir> 推进
 # cli（默认，headless 后备，subprocess 调 claude/opencode 一次跑完）:
@@ -177,7 +169,7 @@ python3 main.py your_reviews.csv \
   --concurrent 4 \
   --creator "Your Name"
 
-# === 可视化模板（6选1，或 none 跳过） ===
+# === 可视化模板（6 选 1，或 none 跳过） ===
 --template premium-gold|dark-tech|linear-minimal|posthog-analytics|stripe-executive|warm-editorial|none
 
 # === 飞书同步（需提前安装 lark-cli 并认证） ===
@@ -186,9 +178,9 @@ python3 main.py your_reviews.csv \
 
 ---
 
-## CSV文件格式要求
+## CSV 文件格式要求
 
-工具支持自动模糊匹配列名，CSV文件需包含：
+工具支持自动模糊匹配列名，CSV 文件需包含：
 
 | 必需列 | 可选列名（模糊匹配） |
 |--------|---------------------|
@@ -196,21 +188,23 @@ python3 main.py your_reviews.csv \
 | 评分 | 打分/rating/score/star |
 | 时间（可选） | 时间/date/日期/time |
 
-**示例**：详见 `examples/reviews_sample.csv`
+示例文件见 `examples/reviews_sample.csv`。
 
 ---
 
 ## 输出示例
 
-运行完成后，将在 `output/` 目录生成以下文件：
+运行完成后，在 `output/` 目录生成以下文件：
 
-### 1. CSV标签数据
+### 1. CSV 标签数据
+
 ```csv
 评论内容,评分,性别,年龄段,职业,购买角色,使用场景,满意度...
 "The quality is amazing",5,女性,25-34岁,白领,自用,家用办公,高...
 ```
 
-### 2. Markdown洞察报告
+### 2. Markdown 洞察报告
+
 ```markdown
 # 产品分析洞察报告
 
@@ -221,27 +215,20 @@ python3 main.py your_reviews.csv \
 ...
 ```
 
-### 3. HTML可视化看板
-- 黑金奢华配色
-- 交互式图表
-- 动态数据展示
-- 创作者署名（鎏金发光效果）
+### 3. HTML 可视化看板
+
+- 6 套主题可选，见「6 套主题可视化看板」
+- 交互式 Chart.js 图表，数据来自打标结果统计
+- 报告署名可自定义（`--creator` 参数）
 
 ---
 
 ## 使用场景
 
-### 场景1：产品优化
-分析自己产品的评论，发现用户痛点，优化产品功能和设计。
-
-### 场景2：竞品分析
-分析竞品评论，了解竞争对手的优势和劣势，寻找差异化机会。
-
-### 场景3：市场调研
-批量分析多个产品的评论，了解市场需求、用户偏好和行业趋势。
-
-### 场景4：用户洞察
-深度了解目标用户群体，构建精准用户画像，优化营销策略。
+- **产品优化**：分析自己产品的评论，定位用户痛点，改进功能和设计。
+- **竞品分析**：分析竞品评论，了解对手的优势与短板，寻找差异化机会。
+- **市场调研**：批量分析多个产品的评论，了解市场需求和用户偏好。
+- **用户洞察**：从评论中构建用户画像，为营销策略提供依据。
 
 ---
 
@@ -254,21 +241,19 @@ voc-analyzer/
 ├── requirements.txt             # Python 依赖
 ├── .env.example                 # 环境变量模板
 ├── src/
-│   ├── config.py                # CLI 单一模式配置
+│   ├── config.py                # 配置
 │   ├── template_engine.py       # 统一模板引擎（Jinja2 SSR + 共享基座）
 │   ├── chart_engine.py          # Chart.js 图表配置生成
-│   ├── insights_generator.py    # 15章洞察报告生成（CLI subprocess）
+│   ├── insights_generator.py    # 15 章洞察报告生成（CLI subprocess）
 │   ├── agent_pipeline.py        # Agent 自执行模式（prepare/resume 状态机）
-│   ├── pipeline_common.py       # 共享输出阶段（打标CSV + MD + HTML + 飞书）
+│   ├── pipeline_common.py       # 共享输出阶段（打标 CSV + MD + HTML + 飞书）
 │   ├── output_manager.py        # 输出管理（MD + HTML + 飞书同步）
 │   ├── feishu_sync.py           # 飞书文档 + 白板同步
 │   ├── report_generator.py      # 报告生成（兼容层）
 │   ├── data_fetchers/           # 数据接入层（CSV + 卖家精灵）
-│   ├── prompts/                 # 15章 Prompt 体系
+│   ├── prompts/                 # 15 章 Prompt 体系
 │   └── templates/               # 可视化看板模板
 │       ├── base/                # 共享基座
-│       │   ├── dashboard_base.html   # 基座 HTML（Jinja2）
-│       │   └── dashboard_base.css    # 基座布局 CSS
 │       ├── premium-gold/        # 黑金主题
 │       ├── dark-tech/           # 赛博朋克主题
 │       ├── linear-minimal/      # 极简蓝白主题
@@ -287,76 +272,44 @@ voc-analyzer/
 ## 常见问题
 
 <details>
-<summary><b>Q1: V2.0 和 V1.0 有什么区别？</b></summary>
+<summary><b>Q1: 需要什么 API Key？</b></summary>
 
-**A**: V2.0 是全面升级：
-- **零 API Key**：删除 Gemini 依赖，统一 CLI 单一模式
-- **14章报告**：从 7 章扩展到 14 章深度洞察
-- **6套主题看板**：从 1 套扩展到 6 套（含玻璃拟态质感）
-- **飞书同步**：自动同步文档 + mermaid 白板
-- **共享基座架构**：bug 只修一处，新增模板只需一个 CSS 文件
+**A**: 不需要。`--llm agent` 模式下 LLM 工序由宿主 Agent 自执行（任何 AI Coding Agent 均可，消耗宿主配额）；`--llm cli` 后备模式使用 Claude Code 或 OpenCode CLI，消耗对应配额。
 </details>
 
 <details>
-<summary><b>Q2: 需要什么 API Key？</b></summary>
+<summary><b>Q2: 支持哪些电商平台？</b></summary>
 
-**A**: **无需任何 API Key**。`--llm agent` 模式下 LLM 工序由宿主 Agent 自执行（任何 AI Coding Agent 均可，消耗宿主配额）；`--llm cli` 后备模式使用 Claude Code / OpenCode CLI，消耗对应配额。
-</details>
-
-<details>
-<summary><b>Q3: CSV 文件格式有什么要求？</b></summary>
-
-**A**: CSV 文件需要包含以下列（支持模糊匹配）：
-- **评论内容**：内容/评价/body/review
-- **评分**：打分/rating/score
-- **时间**（可选）：时间/date/日期
-
-详见 `examples/reviews_sample.csv`
-</details>
-
-<details>
-<summary><b>Q4: 如何选择可视化模板？</b></summary>
-
-**A**: 6 套模板对应不同场景：
-- **premium-gold**：高管汇报、品牌展示（默认）
-- **dark-tech**：技术团队、数据分析
-- **linear-minimal**：产品评审、简洁汇报
-- **posthog-analytics**：运营复盘、增长分析
-- **stripe-executive**：金融企业、投资决策
-- **warm-editorial**：品牌报告、杂志风格
-
-使用 `--template none` 可跳过看板生成。
-</details>
-
-<details>
-<summary><b>Q5: 支持哪些电商平台？</b></summary>
-
-**A**: 理论上支持所有提供评论导出的电商平台：Amazon、eBay、AliExpress、Shopee、淘宝/天猫，以及其他 CSV 格式评论数据。
+**A**: 支持所有可以导出评论 CSV 的平台：Amazon、eBay、AliExpress、Shopee、淘宝/天猫，以及其他 CSV 格式的评论数据。
 </details>
 
 ---
 
-## 与其他工具对比
+## 能力与边界
 
-| 特性 | VOC Analyzer V2.0 | 其他工具 |
-|------|---------------------------|---------|
-| **架构** | Agent 原生 Skill | 通常为独立脚本 |
-| **API Key** | 零（宿主 Agent 自执行 / CLI 后备） | 多数需要 API Key |
-| **洞察报告** | 15章深度分析 | 基础统计 |
-| **可视化** | 6套主题 + 玻璃拟态 | 单一模板或无 |
-| **飞书集成** | 文档 + 白板自动同步 | 多不支持 |
-| **数据隐私** | 本地处理，不上传第三方 | 多为在线服务 |
-| **模板扩展** | 新增主题 = 1个 CSS 文件 | 需完整重写 |
+**能力：**
+
+- Agent 原生：适配主流 AI Coding Agent，LLM 工序自执行，无需单独安装 CLI
+- 本地处理：评论数据不经过第三方在线服务
+- 飞书集成：报告与 mermaid 图表可自动同步为飞书文档和白板
+- 模板扩展：共享基座架构，新增一套主题只需要一个 CSS 文件
+
+**边界：**
+
+- 需要 Python 3.10+ 环境和基本的命令行使用经验
+- 评论数据需要自备：平台 CSV 导出，或卖家精灵 API（需 secret key）
+- 打标和撰写消耗宿主 Agent 或 CLI 的配额，评论量越大耗时越长
+- 输出为本地文件（CSV/Markdown/HTML），不提供在线托管和团队协作功能
 
 ---
 
 ## 路线图
 
-- [x] **v1.0.0** - 首个正式发布（22维度标签 + 双模式 + HTML看板）
-- [x] **v2.0.0** - Agent 原生版（14章报告 + 6套主题 + 飞书同步 + 共享基座架构）
+- [x] **v1.0.0** - 首个正式发布（22 维标签 + 双模式 + HTML 看板）
+- [x] **v2.0.0** - Agent 原生版（14 章报告 + 6 套主题 + 飞书同步 + 共享基座架构）
 - [x] **v2.1.0** - 异常信号卡 + 卖家精灵数据源 + 测试套件（52 用例）
 - [x] **v2.2.0** - Agent 自执行模式（打标与报告由宿主 Agent 完成，零 CLI 依赖；测试 59 用例）
-- [x] **v2.2.1** - description 三段式门面（品牌营销 + 英文概述 + 触发保留）
+- [x] **v2.2.1** - 文档与安装元数据修订
 - [ ] **v2.3.0** - Web 端增强（前端模板选择器 + 截图导出）
 - [ ] **v3.0.0** - 多平台分析（批量 ASIN + 竞品对比报告）
 
@@ -371,21 +324,11 @@ voc-analyzer/
 ## 致谢
 
 - 感谢 Anthropic 提供 Claude AI
-- 感谢 Google 提供 Gemini API
-- 灵感源自开源社区的智慧贡献
+- 感谢开源社区的项目与实践带来的启发
 
 ---
 
 ## 技术支持
 
 - **Issues**: [GitHub Issues](https://github.com/RicePiggy7/voc-analyzer/issues)
-
----
-
-## 📖 写在最后
-
-<div align="center">
-
-**如果这个工具帮到了你,欢迎 ⭐ Star 支持。**
-
-</div>
+- 如果这个工具对你有帮助，欢迎 Star 支持。
